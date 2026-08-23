@@ -68,6 +68,7 @@ ALLOWED_ORIGINS = [
     FRONTEND_URL,
     "http://localhost:5500",
     "http://127.0.0.1:5500",
+    "https://recovery-os-pi.vercel.app",
 ]
 
 
