@@ -1,0 +1,5 @@
+policy,recovery_change,revenue_change,policy_change_difference
+Current,0.0,0.0,0
+Strict,-2.500000000000002,-69275.94999999972,285
+Balanced,0.20000000000000018,21038.91000000015,-68
+Recovery Optimized,3.099999999999997,118579.87000000011,-350

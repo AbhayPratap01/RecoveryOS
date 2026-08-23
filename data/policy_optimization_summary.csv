@@ -1,0 +1,5 @@
+policy,transactions,recovered,recovery_rate,actionable_recovery_rate,recovered_revenue,attempted_revenue,policy_changes,stops
+Current,2000,995,0.4975,0.4975,1478328.6099999999,3012705.2,642,0
+Strict,2000,945,0.4725,0.4725,1409052.6600000001,3012705.2,927,0
+Balanced,2000,999,0.4995,0.4995,1499367.52,3012705.2,574,0
+Recovery Optimized,2000,1057,0.5285,0.5285,1596908.48,3012705.2,292,0

@@ -1,0 +1,4 @@
+policy,recovered,recovery_rate,recovered_revenue,policy_changes,stops
+Relaxed,1040,52.0,1599021.9100000001,292,0
+Current,991,49.55,1525438.8599999999,642,0
+Strict,929,46.45,1426010.4,1205,0

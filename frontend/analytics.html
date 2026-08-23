@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RecoveryOS — Analytics</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
+    ></script>
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                R
+            </div>
+
+            <div>
+                <strong>RecoveryOS</strong>
+                <span>Payment Intelligence</span>
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            <a href="index.html">
+                ◇ Overview
+            </a>
+
+            <a href="index.html">
+                ◈ Recovery
+            </a>
+
+            <a href="index.html">
+                ◷ Audit Trail
+            </a>
+
+            <a
+                href="analytics.html"
+                class="active"
+            >
+                ▦ Analytics
+            </a>
+
+        </nav>
+
+
+        <div class="system-status">
+
+            <span></span>
+
+            <div>
+                <strong>System Operational</strong>
+                <small>Recovery engine online</small>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="page-header">
+
+            <div>
+
+                <div class="eyebrow">
+                    RECOVERY INTELLIGENCE
+                </div>
+
+                <h1>
+                    Analytics
+                </h1>
+
+                <p>
+                    Model performance, recovery strategy
+                    and policy intelligence.
+                </p>
+
+            </div>
+
+            <div class="api-status">
+                <span></span>
+                API Connected
+            </div>
+
+        </div>
+
+
+        <!-- OVERVIEW -->
+
+        <section class="metric-grid">
+
+            <div class="metric-card">
+
+                <span>
+                    Transactions Evaluated
+                </span>
+
+                <strong id="transactions">
+                    —
+                </strong>
+
+                <small>
+                    Evaluation dataset
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span>
+                    Recovery Rate
+                </span>
+
+                <strong id="recoveryRate">
+                    —
+                </strong>
+
+                <small>
+                    Current policy
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span>
+                    Payments Recovered
+                </span>
+
+                <strong id="recovered">
+                    —
+                </strong>
+
+                <small>
+                    Successful recoveries
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span>
+                    Recovered Revenue
+                </span>
+
+                <strong id="revenue">
+                    —
+                </strong>
+
+                <small>
+                    Current policy
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- ROW 1 -->
+
+        <section class="chart-grid">
+
+            <div class="analytics-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            STRATEGY
+                        </span>
+
+                        <h2>
+                            Recovery Strategy Performance
+                        </h2>
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="strategyChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            POLICY
+                        </span>
+
+                        <h2>
+                            Policy Sensitivity
+                        </h2>
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="policyChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FAILURE REASON -->
+
+        <section class="analytics-card full-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        FAILURE INTELLIGENCE
+                    </span>
+
+                    <h2>
+                        Recovery by Failure Reason
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <div class="chart-container large">
+                <canvas id="failureChart"></canvas>
+            </div>
+
+        </section>
+
+
+        <!-- ROBUSTNESS -->
+
+        <section class="analytics-card full-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        MODEL ROBUSTNESS
+                    </span>
+
+                    <h2>
+                        Performance Across Scenarios
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <div class="chart-container">
+                <canvas id="robustnessChart"></canvas>
+            </div>
+
+        </section>
+
+
+        <!-- POLICY TABLE -->
+
+        <section class="analytics-card full-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        GOVERNANCE
+                    </span>
+
+                    <h2>
+                        Policy Comparison
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <div
+                id="policyTable"
+                class="table-wrapper"
+            ></div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="analytics.js"></script>
+
+</body>
+
+</html>

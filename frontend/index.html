@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RecoveryOS</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">R</div>
+
+            <div>
+                <h1>RecoveryOS</h1>
+                <span>Payment Intelligence</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <button class="nav-item active">
+                <span>⌂</span>
+                Overview
+            </button>
+
+            <button class="nav-item">
+                <span>◈</span>
+                Recovery
+            </button>
+
+            <button class="nav-item">
+                <span>◷</span>
+                Audit Trail
+            </button>
+
+            <button class="nav-item">
+                <a
+    href="analytics.html"
+    class="active"
+>
+    ▦ Analytics
+</a>
+            </button>
+
+        </nav>
+
+        <div class="system-status">
+
+            <span class="status-dot"></span>
+
+            <div>
+                <strong>System Operational</strong>
+                <small>Recovery engine online</small>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div>
+                <p class="eyebrow">INTELLIGENT PAYMENT RECOVERY</p>
+
+                <h2>Recovery Command Center</h2>
+
+                <p class="subtitle">
+                    AI-driven recovery decisions with policy-aware execution.
+                </p>
+            </div>
+
+            <div class="header-status">
+                <span class="status-dot"></span>
+                API Connected
+            </div>
+
+        </header>
+
+
+        <!-- METRICS -->
+
+        <section class="metrics">
+
+            <div class="metric-card">
+
+                <span>Recovery Rate</span>
+
+                <strong>50.18%</strong>
+
+                <small class="positive">
+                    ↑ Recovery optimized
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span>Recovered Revenue</span>
+
+                <strong>₹15.26L</strong>
+
+                <small>
+                    Across evaluated transactions
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span>Transactions</span>
+
+                <strong>10,000</strong>
+
+                <small>
+                    Evaluation dataset
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span>Decision Engine</span>
+
+                <strong class="online">ONLINE</strong>
+
+                <small>
+                    ML + Policy + Audit
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- ANALYSIS SECTION -->
+
+        <section class="workspace">
+
+            <!-- INPUT -->
+
+            <div class="panel transaction-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <p class="eyebrow">TRANSACTION</p>
+
+                        <h3>Analyze Failed Payment</h3>
+                    </div>
+
+                    <span class="panel-number">01</span>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+
+                        <label>Transaction ID</label>
+
+                        <input
+                            id="transactionId"
+                            type="text"
+                            value="txn_000003"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Amount</label>
+
+                        <input
+                            id="amount"
+                            type="number"
+                            value="2702.12"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Payment Method</label>
+
+                        <select id="paymentMethod">
+
+                            <option value="netbanking">
+                                Netbanking
+                            </option>
+
+                            <option value="card">
+                                Card
+                            </option>
+
+                            <option value="upi">
+                                UPI
+                            </option>
+
+                            <option value="wallet">
+                                Wallet
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Customer Age (days)</label>
+
+                        <input
+                            id="customerAge"
+                            type="number"
+                            value="665"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Previous Transactions</label>
+
+                        <input
+                            id="previousTransactions"
+                            type="number"
+                            value="13"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Previous Successes</label>
+
+                        <input
+                            id="previousSuccesses"
+                            type="number"
+                            value="10"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Historical Success Rate</label>
+
+                        <input
+                            id="historicalRate"
+                            type="number"
+                            step="0.0001"
+                            value="0.7692"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Attempt Number</label>
+
+                        <input
+                            id="attemptNumber"
+                            type="number"
+                            value="1"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>First Purchase</label>
+
+                        <select id="firstPurchase">
+
+                            <option value="false">
+                                No
+                            </option>
+
+                            <option value="true">
+                                Yes
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Failure Reason</label>
+
+                        <select id="failureReason">
+
+                            <option value="bank_decline">
+                                Bank Decline
+                            </option>
+
+                            <option value="network_error">
+                                Network Error
+                            </option>
+
+                            <option value="gateway_error">
+                                Gateway Error
+                            </option>
+
+                            <option value="insufficient_balance">
+                                Insufficient Balance
+                            </option>
+
+                            <option value="expired_card">
+                                Expired Card
+                            </option>
+
+                            <option value="authentication_failed">
+                                Authentication Failed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="analyzeButton"
+                    class="primary-button"
+                    onclick="analyzeTransaction()"
+                >
+
+                    Analyze Payment
+
+                    <span>→</span>
+
+                </button>
+
+
+                <div
+                    id="loading"
+                    class="loading hidden"
+                >
+                    Running RecoveryOS decision engine...
+                </div>
+
+
+                <div
+                    id="error"
+                    class="error hidden"
+                ></div>
+
+            </div>
+
+
+            <!-- DECISION -->
+
+            <div class="panel decision-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <p class="eyebrow">AI DECISION</p>
+
+                        <h3>Recovery Recommendation</h3>
+                    </div>
+
+                    <span class="panel-number">02</span>
+
+                </div>
+
+
+                <div id="emptyDecision" class="empty-state">
+
+                    <div class="empty-icon">
+                        ✦
+                    </div>
+
+                    <h4>Awaiting transaction analysis</h4>
+
+                    <p>
+                        Submit a failed payment to generate an
+                        AI-powered recovery strategy.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="decisionContent"
+                    class="hidden"
+                >
+
+                    <div class="recommendation">
+
+                        <span class="recommendation-label">
+                            RECOMMENDED ACTION
+                        </span>
+
+                        <div
+                            id="recommendedAction"
+                            class="recommended-action"
+                        >
+                            RETRY
+                        </div>
+
+                        <div class="confidence">
+
+                            <span>Recovery probability</span>
+
+                            <strong id="recommendedProbability">
+                                68.02%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="action-list">
+
+                        <div class="action-row">
+
+                            <div>
+                                <strong>Retry</strong>
+                                <small>
+                                    Direct payment retry
+                                </small>
+                            </div>
+
+                            <div class="probability">
+
+                                <div class="bar">
+                                    <div
+                                        id="retryBar"
+                                        class="bar-fill"
+                                    ></div>
+                                </div>
+
+                                <span id="retryProbability">
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="action-row">
+
+                            <div>
+                                <strong>Payment Link</strong>
+                                <small>
+                                    Generate alternate payment
+                                </small>
+                            </div>
+
+                            <div class="probability">
+
+                                <div class="bar">
+                                    <div
+                                        id="paymentLinkBar"
+                                        class="bar-fill"
+                                    ></div>
+                                </div>
+
+                                <span id="paymentLinkProbability">
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="action-row">
+
+                            <div>
+                                <strong>Reminder</strong>
+                                <small>
+                                    Prompt customer to retry
+                                </small>
+                            </div>
+
+                            <div class="probability">
+
+                                <div class="bar">
+                                    <div
+                                        id="reminderBar"
+                                        class="bar-fill"
+                                    ></div>
+                                </div>
+
+                                <span id="reminderProbability">
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- POLICY -->
+
+<div class="policy-box">
+
+    <div class="policy-header">
+
+        <span>
+            POLICY CHECK
+        </span>
+
+        <strong id="policyStatus">
+            ✓ APPROVED
+        </strong>
+
+    </div>
+
+    <div id="policyReasons">
+        No policy restrictions.
+    </div>
+
+</div>
+
+
+<!-- DECISION INTELLIGENCE -->
+
+<!-- DECISION INTELLIGENCE -->
+
+<div class="decision-intelligence">
+
+    <div class="decision-intelligence-header">
+
+        <div>
+
+            <span class="eyebrow">
+                DECISION INTELLIGENCE
+            </span>
+
+            <h3>
+                Why this decision?
+            </h3>
+
+        </div>
+
+        <span class="decision-badge">
+            AI EXPLANATION
+        </span>
+
+    </div>
+
+
+    <div
+        id="reasonList"
+        class="reason-list"
+    >
+
+        <div class="reason-item">
+
+            <span class="reason-icon">
+                ✓
+            </span>
+
+            <span>
+                Analyze a transaction to see why
+                the recovery action was selected.
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- EXECUTE -->
+
+                    <button
+                        id="executeButton"
+                        class="execute-button"
+                        onclick="executeRecovery()"
+                    >
+
+                        Execute Recovery
+
+                        <span>↗</span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULT -->
+
+        <section
+            id="resultSection"
+            class="result-section hidden"
+        >
+
+            <div class="success-card">
+
+                <div class="success-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <p class="eyebrow">
+                        RECOVERY RESULT
+                    </p>
+
+                    <h3 id="executionStatus">
+                        Payment Recovered
+                    </h3>
+
+                    <p id="executionMessage">
+                        Payment successfully recovered.
+                    </p>
+
+                </div>
+
+                <div class="recovered-amount">
+
+                    <span>Amount Recovered</span>
+
+                    <strong id="recoveredAmount">
+                        ₹0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="audit-card">
+
+                <div>
+
+                    <p class="eyebrow">
+                        AUDIT TRAIL
+                    </p>
+
+                    <h3>Decision → Policy → Execution</h3>
+
+                </div>
+
+                <div class="audit-id">
+
+                    <span>Audit ID</span>
+
+                    <code id="auditId">
+                        —
+                    </code>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- AUDIT TIMELINE -->
+
+        <section
+            id="auditSection"
+            class="panel audit-panel hidden"
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        GOVERNANCE
+                    </p>
+
+                    <h3>Transaction Audit Trail</h3>
+
+                </div>
+
+            </div>
+
+
+            <div id="auditTimeline"></div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
