@@ -146,76 +146,110 @@ df = pd.read_csv(
 
 
 # ============================================================
-# TRAIN MODEL
+# MODEL TRAINING
 # ============================================================
 
-print("Training RecoveryOS API model...")
+def train_recovery_model(dataframe):
+
+    print(
+        "Training RecoveryOS API model..."
+    )
+
+    train_df, _ = train_test_split(
+        dataframe,
+        test_size=0.20,
+        random_state=42,
+    )
 
 
-train_df, _ = train_test_split(
-    df,
-    test_size=0.20,
-    random_state=42,
-)
+    train_actions = create_action_dataset(
+        train_df,
+        seed=42,
+    )
 
 
-train_actions = create_action_dataset(
-    train_df,
-    seed=42,
-)
-
-
-X_train = train_actions[FEATURES]
-
-y_train = train_actions["recovered"]
-
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        (
-            "categorical",
-            OneHotEncoder(
-                handle_unknown="ignore"
-            ),
-            CATEGORICAL_FEATURES,
-        ),
-        (
-            "numeric",
-            "passthrough",
-            NUMERIC_FEATURES,
-        ),
+    X_train = train_actions[
+        FEATURES
     ]
-)
 
 
-model = Pipeline(
-    steps=[
-        (
-            "preprocessor",
-            preprocessor,
-        ),
-        (
-            "classifier",
-            RandomForestClassifier(
-                n_estimators=300,
-                max_depth=12,
-                min_samples_leaf=10,
-                random_state=42,
-                n_jobs=-1,
-                class_weight="balanced",
-            ),
-        ),
+    y_train = train_actions[
+        "recovered"
     ]
+
+
+    preprocessor = ColumnTransformer(
+        transformers=[
+
+            (
+                "categorical",
+
+                OneHotEncoder(
+                    handle_unknown="ignore"
+                ),
+
+                CATEGORICAL_FEATURES,
+            ),
+
+            (
+                "numeric",
+
+                "passthrough",
+
+                NUMERIC_FEATURES,
+            ),
+        ]
+    )
+
+
+    recovery_model = Pipeline(
+        steps=[
+
+            (
+                "preprocessor",
+
+                preprocessor,
+            ),
+
+            (
+                "classifier",
+
+                RandomForestClassifier(
+
+                    n_estimators=300,
+
+                    max_depth=12,
+
+                    min_samples_leaf=10,
+
+                    random_state=42,
+
+                    n_jobs=-1,
+
+                    class_weight="balanced",
+                ),
+            ),
+        ]
+    )
+
+
+    recovery_model.fit(
+        X_train,
+        y_train,
+    )
+
+
+    print(
+        "RecoveryOS API model ready."
+    )
+
+
+    return recovery_model
+
+
+model = train_recovery_model(
+    df
 )
-
-
-model.fit(
-    X_train,
-    y_train,
-)
-
-
-print("RecoveryOS API model ready.")
 
 
 # ============================================================
