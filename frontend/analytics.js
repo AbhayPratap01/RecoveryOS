@@ -1050,7 +1050,7 @@ async function checkAPI() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/health"
+                "https://recoveryos-api-eey6.onrender.com/health"
             );
 
 
