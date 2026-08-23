@@ -1,4 +1,4 @@
-const DATA_PATH = "../data/";
+const DATA_PATH = "./data/";
 
 
 /* ============================================================
@@ -7,17 +7,25 @@ const DATA_PATH = "../data/";
 
 async function loadCSV(filename) {
 
-    const response = await fetch(
-        DATA_PATH + filename
-    );
+    const url = DATA_PATH + filename;
+
+    console.log("Loading analytics dataset:", url);
+
+    const response = await fetch(url);
 
     if (!response.ok) {
         throw new Error(
-            `Unable to load ${filename}`
+            `Unable to load ${filename} (${response.status})`
         );
     }
 
     const text = await response.text();
+
+    if (!text.trim()) {
+        throw new Error(
+            `${filename} is empty`
+        );
+    }
 
     return parseCSV(text);
 }
