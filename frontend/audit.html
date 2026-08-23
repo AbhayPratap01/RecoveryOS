@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Audit Trail | RecoveryOS</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .audit-page {
+            padding: 32px;
+        }
+
+        .audit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .audit-header h1 {
+            margin: 0;
+        }
+
+        .audit-header p {
+            margin-top: 8px;
+            color: #7f8ba5;
+        }
+
+        .audit-status {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid #24304a;
+            background: #10182a;
+            font-size: 13px;
+        }
+
+        .audit-status span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            margin-right: 8px;
+        }
+
+        .audit-card {
+            background: #0d1424;
+            border: 1px solid #202c44;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .audit-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-row input {
+            flex: 1;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid #263451;
+            background: #080f1d;
+            color: white;
+            outline: none;
+        }
+
+        .search-row button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            background: #5b55f7;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .search-row button:hover {
+            opacity: 0.9;
+        }
+
+        .audit-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .summary-box {
+            background: #10192b;
+            border: 1px solid #202c44;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .summary-label {
+            color: #7f8ba5;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .timeline {
+            position: relative;
+            margin-top: 24px;
+            padding-left: 28px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: #293653;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -27px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6558ff;
+            box-shadow: 0 0 0 4px #10182a;
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .timeline-meta {
+            color: #7f8ba5;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .json-box {
+            background: #080d18;
+            border: 1px solid #202c44;
+            border-radius: 10px;
+            padding: 18px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            color: #b9c5dc;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8ba5;
+        }
+
+        .error-box {
+            background: #291116;
+            border: 1px solid #6b2630;
+            color: #ff8f9a;
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .audit-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .audit-page {
+                padding: 18px;
+            }
+
+            .audit-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .audit-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-mark">R</div>
+
+            <div>
+                <strong>RecoveryOS</strong>
+                <span>Payment Intelligence</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                ◇ Overview
+            </a>
+
+            <a href="index.html#recovery">
+                ◇ Recovery
+            </a>
+
+            <a href="audit.html" class="active">
+                ◷ Audit Trail
+            </a>
+
+            <a href="analytics.html">
+                ▦ Analytics
+            </a>
+
+        </nav>
+
+        <div class="system-status">
+            <span></span>
+            <div>
+                <strong>System Operational</strong>
+                <small>Recovery engine online</small>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <section class="audit-page">
+
+            <div class="audit-header">
+
+                <div>
+                    <div class="section-label">
+                        GOVERNANCE
+                    </div>
+
+                    <h1>
+                        Transaction Audit Trail
+                    </h1>
+
+                    <p>
+                        Decision → Policy → Execution
+                    </p>
+                </div>
+
+                <div class="audit-status">
+                    <span></span>
+                    Audit System Online
+                </div>
+
+            </div>
+
+
+            <!-- SEARCH -->
+            <div class="audit-card">
+
+                <h2>
+                    Find Transaction
+                </h2>
+
+                <div class="search-row">
+
+                    <input
+                        type="text"
+                        id="transactionInput"
+                        placeholder="Enter transaction ID, e.g. txn_000003"
+                    >
+
+                    <button id="searchButton">
+                        Load Audit
+                    </button>
+
+                </div>
+
+                <div
+                    id="errorBox"
+                    class="error-box"
+                ></div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+            <div
+                id="summarySection"
+                class="audit-card"
+                style="display:none;"
+            >
+
+                <h2>
+                    Transaction Summary
+                </h2>
+
+                <div class="audit-summary">
+
+                    <div class="summary-box">
+
+                        <div class="summary-label">
+                            TRANSACTION
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryTransaction"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-box">
+
+                        <div class="summary-label">
+                            ACTION
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryAction"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-box">
+
+                        <div class="summary-label">
+                            POLICY
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryPolicy"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-box">
+
+                        <div class="summary-label">
+                            STATUS
+                        </div>
+
+                        <div
+                            class="summary-value"
+                            id="summaryStatus"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TIMELINE -->
+            <div
+                id="timelineSection"
+                class="audit-card"
+                style="display:none;"
+            >
+
+                <h2>
+                    Decision Timeline
+                </h2>
+
+                <div
+                    id="timeline"
+                    class="timeline"
+                ></div>
+
+            </div>
+
+
+            <!-- RAW AUDIT -->
+            <div
+                id="rawSection"
+                class="audit-card"
+                style="display:none;"
+            >
+
+                <h2>
+                    Audit Record
+                </h2>
+
+                <div
+                    id="rawAudit"
+                    class="json-box"
+                ></div>
+
+            </div>
+
+
+            <!-- EMPTY -->
+            <div
+                id="emptyState"
+                class="audit-card"
+            >
+
+                <div class="empty-state">
+
+                    <h2>
+                        No transaction selected
+                    </h2>
+
+                    <p>
+                        Enter a transaction ID to view its
+                        complete decision and execution history.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="audit.js"></script>
+
+</body>
+</html>

@@ -26,6 +26,7 @@ from backend.audit import (
 
 from fastapi.middleware.cors import CORSMiddleware
 
+audit_store = {}
 
 # ============================================================
 # PATH CONFIGURATION
@@ -324,27 +325,20 @@ def analyze_transaction(
 
     probability_rows = []
 
-
     for action in ACTIONS:
 
         row = record.copy()
-
         row["action"] = action
 
-        probability_rows.append(
-            row
-        )
-
+        probability_rows.append(row)
 
     action_df = pd.DataFrame(
         probability_rows
     )[FEATURES]
 
-
     probabilities = model.predict_proba(
         action_df
     )[:, 1]
-
 
     probability_map = dict(
         zip(
@@ -353,20 +347,17 @@ def analyze_transaction(
         )
     )
 
-
     decision = choose_best_allowed_action(
         transaction=record,
         probabilities=probability_map,
         policy_checker=check_policy,
     )
 
-
     audit = create_audit_event(
         transaction=record,
         probabilities=probability_map,
         decision=decision,
     )
-
 
     return {
 
@@ -411,7 +402,6 @@ def analyze_transaction(
                 )
 
             for action in ACTIONS
-
         },
 
         "preferred_action":

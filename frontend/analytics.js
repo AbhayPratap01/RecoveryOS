@@ -1,5 +1,5 @@
 const DATA_PATH = "./data/";
-
+const API_URL = "https://recoveryos-api-eey6.onrender.com";
 
 /* ============================================================
    CSV LOADER
@@ -1049,53 +1049,49 @@ function renderPolicyTable(
 async function checkAPI() {
 
     const status =
-        document.querySelector(
-            ".api-status"
-        );
+        document.querySelector(".api-status");
 
+    if (!status) {
+        return;
+    }
 
     try {
 
         const response =
             await fetch(
-                "https://recoveryos-api-eey6.onrender.com/health"
+                `${API_URL}/health`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
             );
-
 
         if (!response.ok) {
-
-            throw new Error(
-                "API unavailable"
-            );
-
+            throw new Error("API unavailable");
         }
 
-
         status.innerHTML = `
-
             <span></span>
-
             API Connected
-
         `;
 
-    }
+    } catch (error) {
 
-
-    catch {
+        console.error(
+            "API health check failed:",
+            error
+        );
 
         status.innerHTML = `
-
             <span
                 style="
                     background:#ef4444;
                 "
             ></span>
-
             API Offline
-
         `;
-
     }
 }
 
@@ -1106,22 +1102,20 @@ async function checkAPI() {
 
 async function initializeAnalytics() {
 
+    const status =
+        document.querySelector(".api-status");
+
     try {
 
         /*
-           Load all analytics CSV datasets.
-        */
+         * Load analytics datasets.
+         */
 
         const [
-
             strategyData,
-
             policyData,
-
             failureData,
-
             robustnessData
-
         ] = await Promise.all([
 
             loadCSV(
@@ -1142,9 +1136,8 @@ async function initializeAnalytics() {
 
         ]);
 
-
         console.log(
-            "Analytics datasets loaded:",
+            "Analytics datasets loaded successfully.",
             {
                 strategyData,
                 policyData,
@@ -1155,33 +1148,38 @@ async function initializeAnalytics() {
 
 
         /*
-           Render dashboard.
-        */
+         * Render dashboard metrics.
+         */
 
         renderMetrics(
             strategyData
         );
 
 
+        /*
+         * Render charts.
+         */
+
         renderStrategyChart(
             strategyData
         );
-
 
         renderPolicyChart(
             policyData
         );
 
-
         renderFailureChart(
             failureData
         );
-
 
         renderRobustnessChart(
             robustnessData
         );
 
+
+        /*
+         * Render policy table.
+         */
 
         renderPolicyTable(
             policyData
@@ -1189,13 +1187,15 @@ async function initializeAnalytics() {
 
 
         /*
-           Check backend.
-        */
+         * Check backend independently.
+         *
+         * A backend health-check failure should
+         * NOT destroy the analytics dashboard.
+         */
 
         await checkAPI();
 
     }
-
 
     catch (error) {
 
@@ -1204,29 +1204,17 @@ async function initializeAnalytics() {
             error
         );
 
-
-        const status =
-            document.querySelector(
-                ".api-status"
-            );
-
-
         if (status) {
 
             status.innerHTML = `
-
                 <span
                     style="
                         background:#ef4444;
                     "
                 ></span>
-
                 Data Load Error
-
             `;
-
         }
-
     }
 }
 
