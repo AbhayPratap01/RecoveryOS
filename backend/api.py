@@ -4,6 +4,7 @@ import os
 import pandas as pd
 
 from fastapi import FastAPI, HTTPException
+
 from pydantic import BaseModel
 
 from sklearn.compose import ColumnTransformer
@@ -12,10 +13,11 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
+from fastapi.middleware.cors import CORSMiddleware
+
 from backend.ml_dataset import create_action_dataset
 from backend.decision_engine import choose_best_allowed_action
 from backend.policy_engine import check_policy
-
 from backend.executor import execute_action
 
 from backend.audit import (
@@ -24,9 +26,9 @@ from backend.audit import (
     get_transaction_audit,
 )
 
-from fastapi.middleware.cors import CORSMiddleware
 
 audit_store = {}
+
 
 # ============================================================
 # PATH CONFIGURATION
@@ -36,6 +38,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATA_DIR = BASE_DIR / "data"
 
+
 # ============================================================
 # ENVIRONMENT CONFIGURATION
 # ============================================================
@@ -44,6 +47,7 @@ ENVIRONMENT = os.getenv(
     "ENVIRONMENT",
     "development"
 )
+
 
 # ============================================================
 # APP
@@ -64,6 +68,7 @@ FRONTEND_URL = os.getenv(
     "FRONTEND_URL",
     "http://127.0.0.1:5500"
 )
+
 
 ALLOWED_ORIGINS = [
     FRONTEND_URL,
@@ -142,6 +147,7 @@ ACTIONS = [
 
 TRANSACTIONS_FILE = DATA_DIR / "transactions.csv"
 
+
 df = pd.read_csv(
     TRANSACTIONS_FILE
 )
@@ -163,22 +169,18 @@ def train_recovery_model(dataframe):
         random_state=42,
     )
 
-
     train_actions = create_action_dataset(
         train_df,
         seed=42,
     )
 
-
     X_train = train_actions[
         FEATURES
     ]
 
-
     y_train = train_actions[
         "recovered"
     ]
-
 
     preprocessor = ColumnTransformer(
         transformers=[
@@ -202,7 +204,6 @@ def train_recovery_model(dataframe):
             ),
         ]
     )
-
 
     recovery_model = Pipeline(
         steps=[
@@ -234,17 +235,14 @@ def train_recovery_model(dataframe):
         ]
     )
 
-
     recovery_model.fit(
         X_train,
         y_train,
     )
 
-
     print(
         "RecoveryOS API model ready."
     )
-
 
     return recovery_model
 
@@ -313,6 +311,135 @@ def health():
 
 
 # ============================================================
+# TRANSACTION HELPERS
+# ============================================================
+
+TRANSACTION_COLUMNS = [
+    "transaction_id",
+    "amount",
+    "payment_method",
+    "customer_age_days",
+    "previous_transactions",
+    "previous_successes",
+    "historical_success_rate",
+    "attempt_number",
+    "is_first_purchase",
+    "failure_reason",
+]
+
+
+def serialize_transaction(row):
+
+    transaction = {}
+
+    for column in TRANSACTION_COLUMNS:
+
+        value = row[column]
+
+        if pd.isna(value):
+            transaction[column] = None
+
+        elif column == "transaction_id":
+            transaction[column] = str(value)
+
+        elif column == "is_first_purchase":
+            transaction[column] = bool(value)
+
+        elif column in [
+            "amount",
+            "historical_success_rate",
+        ]:
+            transaction[column] = float(value)
+
+        elif column in [
+            "customer_age_days",
+            "previous_transactions",
+            "previous_successes",
+            "attempt_number",
+        ]:
+            transaction[column] = int(value)
+
+        else:
+            transaction[column] = str(value)
+
+    return transaction
+
+
+# ============================================================
+# TRANSACTIONS
+# ============================================================
+
+@app.get("/transactions")
+def get_transactions():
+
+    transactions = df[
+        TRANSACTION_COLUMNS
+    ]
+
+    return {
+        "count": len(transactions),
+
+        "transactions": [
+            serialize_transaction(row)
+            for _, row in transactions.iterrows()
+        ],
+    }
+
+
+# ============================================================
+# RANDOM TRANSACTION
+# IMPORTANT:
+# This endpoint must come BEFORE /transactions/{transaction_id}
+# ============================================================
+
+@app.get("/transactions/random")
+def get_random_transaction():
+
+    if df.empty:
+
+        raise HTTPException(
+            status_code=404,
+            detail="No transactions available"
+        )
+
+    random_row = df.sample(
+        n=1
+    ).iloc[0]
+
+    return serialize_transaction(
+        random_row
+    )
+
+
+# ============================================================
+# SPECIFIC TRANSACTION
+# ============================================================
+
+@app.get("/transactions/{transaction_id}")
+def get_transaction(
+    transaction_id: str
+):
+
+    matches = df[
+        df["transaction_id"].astype(str)
+        == str(transaction_id)
+    ]
+
+    if matches.empty:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Transaction not found"
+        )
+
+    transaction = serialize_transaction(
+        matches.iloc[0]
+    )
+
+    return transaction
+
+
+# ============================================================
 # ANALYZE TRANSACTION
 # ============================================================
 
@@ -328,9 +455,12 @@ def analyze_transaction(
     for action in ACTIONS:
 
         row = record.copy()
+
         row["action"] = action
 
-        probability_rows.append(row)
+        probability_rows.append(
+            row
+        )
 
     action_df = pd.DataFrame(
         probability_rows
@@ -402,6 +532,7 @@ def analyze_transaction(
                 )
 
             for action in ACTIONS
+
         },
 
         "preferred_action":
@@ -443,7 +574,6 @@ def execute_recovery(
         == str(request.transaction_id)
     ]
 
-
     if transaction_matches.empty:
 
         raise HTTPException(
@@ -451,20 +581,17 @@ def execute_recovery(
             detail="Transaction not found"
         )
 
-
     transaction = (
         transaction_matches
         .iloc[0]
         .to_dict()
     )
 
-
     allowed_actions = [
         "retry",
         "payment_link",
         "reminder",
     ]
-
 
     if request.action not in allowed_actions:
 
@@ -473,12 +600,10 @@ def execute_recovery(
             detail="Invalid recovery action"
         )
 
-
     policy = check_policy(
         transaction,
         request.action
     )
-
 
     if not policy["allowed"]:
 
@@ -493,12 +618,10 @@ def execute_recovery(
             }
         )
 
-
     execution = execute_action(
         transaction,
         request.action,
     )
-
 
     probabilities = {
 
@@ -508,7 +631,6 @@ def execute_recovery(
             ]
 
     }
-
 
     decision = {
 
@@ -526,14 +648,12 @@ def execute_recovery(
         "rejected": [],
     }
 
-
     audit = create_audit_event(
         transaction=transaction,
         probabilities=probabilities,
         decision=decision,
         execution=execution,
     )
-
 
     return {
 
@@ -576,14 +696,12 @@ def transaction_audit(
         transaction_id
     )
 
-
     if not events:
 
         raise HTTPException(
             status_code=404,
             detail="No audit events found"
         )
-
 
     return {
 
@@ -606,36 +724,29 @@ def get_analytics():
         DATA_DIR / "transactions.csv"
     )
 
-
     strategy = pd.read_csv(
         DATA_DIR / "strategy_benchmark.csv"
     )
-
 
     policy = pd.read_csv(
         DATA_DIR / "policy_sensitivity_summary.csv"
     )
 
-
     failure_reason = pd.read_csv(
         DATA_DIR / "policy_sensitivity_failure_reason.csv"
     )
-
 
     robustness = pd.read_csv(
         DATA_DIR / "robustness_summary.csv"
     )
 
-
     utility = pd.read_csv(
         DATA_DIR / "utility_sensitivity_summary.csv"
     )
 
-
     policy_optimization = pd.read_csv(
         DATA_DIR / "policy_optimization_summary.csv"
     )
-
 
     decision_layer = pd.read_csv(
         DATA_DIR / "decision_layer_analysis.csv"
@@ -650,9 +761,7 @@ def get_analytics():
         transactions
     )
 
-
     current_policy = None
-
 
     for _, row in policy.iterrows():
 
@@ -687,13 +796,11 @@ def get_analytics():
             ]
         )
 
-
         recovered_revenue = float(
             current_policy[
                 "recovered_revenue"
             ]
         )
-
 
         recovered = int(
             current_policy[

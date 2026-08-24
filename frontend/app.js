@@ -71,6 +71,398 @@ function getTransactionData() {
     };
 }
 
+/* =========================================================
+   RANDOM TRANSACTION FROM DATASET
+========================================================= */
+
+function setFieldValue(id, value) {
+    const field = getElement(id);
+
+    if (!field) {
+        return;
+    }
+
+    if (value === null || value === undefined) {
+        return;
+    }
+
+    field.value = value;
+}
+
+
+function resetAnalysisUI() {
+
+    currentAnalysis = null;
+
+    const emptyDecision = getElement("emptyDecision");
+    const decisionContent = getElement("decisionContent");
+    const resultSection = getElement("resultSection");
+    const auditSection = getElement("auditSection");
+    const error = getElement("error");
+
+    if (emptyDecision) {
+        emptyDecision.classList.remove("hidden");
+    }
+
+    if (decisionContent) {
+        decisionContent.classList.add("hidden");
+    }
+
+    if (resultSection) {
+        resultSection.classList.add("hidden");
+    }
+
+    if (auditSection) {
+        auditSection.classList.add("hidden");
+    }
+
+    if (error) {
+        error.classList.add("hidden");
+    }
+}
+
+
+function populateTransaction(transaction) {
+
+    if (!transaction) {
+        throw new Error("No transaction data was returned.");
+    }
+
+    const transactionId =
+        transaction.transaction_id ??
+        transaction.transactionId ??
+        transaction.id;
+
+    const amount =
+        transaction.amount;
+
+    const paymentMethod =
+        transaction.payment_method ??
+        transaction.paymentMethod;
+
+    const customerAge =
+        transaction.customer_age_days ??
+        transaction.customerAgeDays ??
+        transaction.customer_age;
+
+    const previousTransactions =
+        transaction.previous_transactions ??
+        transaction.previousTransactions;
+
+    const previousSuccesses =
+        transaction.previous_successes ??
+        transaction.previousSuccesses;
+
+    const historicalRate =
+        transaction.historical_success_rate ??
+        transaction.historicalSuccessRate;
+
+    const attemptNumber =
+        transaction.attempt_number ??
+        transaction.attemptNumber;
+
+    const isFirstPurchase =
+        transaction.is_first_purchase ??
+        transaction.isFirstPurchase;
+
+    const failureReason =
+        transaction.failure_reason ??
+        transaction.failureReason;
+
+
+    setFieldValue(
+        "transactionId",
+        transactionId
+    );
+
+    setFieldValue(
+        "amount",
+        amount
+    );
+
+    setFieldValue(
+        "paymentMethod",
+        paymentMethod
+    );
+
+    setFieldValue(
+        "customerAge",
+        customerAge
+    );
+
+    setFieldValue(
+        "previousTransactions",
+        previousTransactions
+    );
+
+    setFieldValue(
+        "previousSuccesses",
+        previousSuccesses
+    );
+
+    setFieldValue(
+        "historicalRate",
+        historicalRate
+    );
+
+    setFieldValue(
+        "attemptNumber",
+        attemptNumber
+    );
+
+    setFieldValue(
+        "firstPurchase",
+        Boolean(isFirstPurchase)
+            ? "true"
+            : "false"
+    );
+
+    setFieldValue(
+        "failureReason",
+        failureReason
+    );
+
+
+    currentTransaction =
+        getTransactionData();
+
+
+    resetAnalysisUI();
+}
+
+
+async function loadRandomTransaction() {
+
+    const button =
+        getElement(
+            "randomTransactionButton"
+        );
+
+
+    if (button) {
+
+        button.disabled = true;
+        button.textContent = "Loading...";
+    }
+
+
+    clearError();
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/transactions/random`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            let detail =
+                data.detail;
+
+
+            if (
+                typeof detail === "object"
+                && detail !== null
+            ) {
+
+                detail =
+                    detail.message ||
+                    detail.detail ||
+                    "Unable to load random transaction.";
+            }
+
+
+            throw new Error(
+                detail ||
+                "Unable to load random transaction."
+            );
+        }
+
+
+        /*
+         * Backend may return either:
+         *
+         * {
+         *     transaction_id: "...",
+         *     amount: ...
+         * }
+         *
+         * OR:
+         *
+         * {
+         *     transaction: {
+         *         transaction_id: "...",
+         *         ...
+         *     }
+         * }
+         */
+
+        const transaction =
+            data.transaction ||
+            data;
+
+
+        populateTransaction(
+            transaction
+        );
+
+
+        console.log(
+            "Random transaction loaded:",
+            transaction
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Random transaction loading failed:",
+            error
+        );
+
+
+        showError(
+            `Unable to load random transaction: ${error.message}`
+        );
+
+
+    } finally {
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.textContent =
+                "🎲 Random Transaction";
+        }
+    }
+}
+
+
+function initializeRandomTransactionButton() {
+
+    let button =
+        getElement(
+            "randomTransactionButton"
+        );
+
+
+    /*
+     * If button does not already exist
+     * in index.html, create it automatically.
+     */
+
+    if (!button) {
+
+        const transactionIdInput =
+            getElement(
+                "transactionId"
+            );
+
+
+        if (!transactionIdInput) {
+
+            console.warn(
+                "transactionId input not found."
+            );
+
+            return;
+        }
+
+
+        button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.type = "button";
+
+        button.id =
+            "randomTransactionButton";
+
+        button.className =
+            "random-transaction-button";
+
+        button.textContent =
+            "🎲 Random Transaction";
+
+
+        /*
+         * Styling
+         */
+
+        button.style.marginTop =
+            "8px";
+
+        button.style.padding =
+            "9px 14px";
+
+        button.style.border =
+            "1px solid #334155";
+
+        button.style.borderRadius =
+            "8px";
+
+        button.style.background =
+            "#111827";
+
+        button.style.color =
+            "#e2e8f0";
+
+        button.style.cursor =
+            "pointer";
+
+        button.style.fontSize =
+            "12px";
+
+
+        /*
+         * Put button below transaction ID
+         */
+
+        if (
+            transactionIdInput.parentElement
+        ) {
+
+            transactionIdInput
+                .parentElement
+                .appendChild(button);
+        }
+    }
+
+
+    /*
+     * Prevent duplicate event listeners
+     */
+
+    if (
+        !button.dataset.listenerAttached
+    ) {
+
+        button.addEventListener(
+            "click",
+            loadRandomTransaction
+        );
+
+
+        button.dataset.listenerAttached =
+            "true";
+    }
+}
 
 /* =========================================================
    FORMATTING
@@ -2263,6 +2655,8 @@ document.addEventListener(
     () => {
 
         initializeEventListeners();
+
+        initializeRandomTransactionButton();
 
         checkAPI();
 
