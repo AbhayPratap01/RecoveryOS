@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+
         .audit-page {
             padding: 32px;
         }
@@ -62,9 +64,11 @@
         .search-row {
             display: flex;
             gap: 12px;
+            align-items: center;
         }
 
-        .search-row input {
+        .search-row input,
+        .search-row select {
             flex: 1;
             padding: 14px 16px;
             border-radius: 10px;
@@ -72,6 +76,10 @@
             background: #080f1d;
             color: white;
             outline: none;
+        }
+
+        .search-row select {
+            cursor: pointer;
         }
 
         .search-row button {
@@ -86,6 +94,27 @@
 
         .search-row button:hover {
             opacity: 0.9;
+        }
+
+        .secondary-button {
+            background: #18233a !important;
+            border: 1px solid #2b3957 !important;
+        }
+
+        .search-label {
+            display: block;
+            color: #7f8ba5;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .selector-section {
+            margin-bottom: 22px;
+        }
+
+        .manual-section {
+            padding-top: 20px;
+            border-top: 1px solid #202c44;
         }
 
         .audit-summary {
@@ -183,13 +212,36 @@
             display: none;
         }
 
+        .success-box {
+            background: #0d2519;
+            border: 1px solid #1f6b3b;
+            color: #6ee7a1;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .transaction-count {
+            color: #7f8ba5;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
         @media (max-width: 900px) {
+
             .audit-summary {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .search-row {
+                flex-wrap: wrap;
+            }
+
         }
 
         @media (max-width: 600px) {
+
             .audit-page {
                 padding: 18px;
             }
@@ -202,39 +254,53 @@
 
             .search-row {
                 flex-direction: column;
+                align-items: stretch;
             }
 
             .audit-summary {
                 grid-template-columns: 1fr;
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
 <div class="app">
 
     <!-- SIDEBAR -->
+
     <aside class="sidebar">
 
         <div class="brand">
-            <div class="brand-mark">R</div>
+
+            <div class="brand-mark">
+                R
+            </div>
 
             <div>
-                <strong>RecoveryOS</strong>
-                <span>Payment Intelligence</span>
+
+                <strong>
+                    RecoveryOS
+                </strong>
+
+                <span>
+                    Payment Intelligence
+                </span>
+
             </div>
+
         </div>
+
 
         <nav>
 
             <a href="index.html">
                 ◇ Overview
-            </a>
-
-            <a href="index.html#recovery">
-                ◇ Recovery
             </a>
 
             <a href="audit.html" class="active">
@@ -247,25 +313,41 @@
 
         </nav>
 
+
         <div class="system-status">
+
             <span></span>
+
             <div>
-                <strong>System Operational</strong>
-                <small>Recovery engine online</small>
+
+                <strong>
+                    System Operational
+                </strong>
+
+                <small>
+                    Recovery engine online
+                </small>
+
             </div>
+
         </div>
 
     </aside>
 
 
     <!-- MAIN -->
+
     <main class="main">
 
         <section class="audit-page">
 
+
+            <!-- HEADER -->
+
             <div class="audit-header">
 
                 <div>
+
                     <div class="section-label">
                         GOVERNANCE
                     </div>
@@ -277,46 +359,128 @@
                     <p>
                         Decision → Policy → Execution
                     </p>
+
                 </div>
 
+
                 <div class="audit-status">
+
                     <span></span>
+
                     Audit System Online
+
                 </div>
 
             </div>
 
 
-            <!-- SEARCH -->
+
+            <!-- SEARCH CARD -->
+
             <div class="audit-card">
 
                 <h2>
                     Find Transaction
                 </h2>
 
-                <div class="search-row">
 
-                    <input
-                        type="text"
-                        id="transactionInput"
-                        placeholder="Enter transaction ID, e.g. txn_000003"
+                <!-- AVAILABLE TRANSACTIONS -->
+
+                <div class="selector-section">
+
+                    <label
+                        class="search-label"
+                        for="transactionSelect"
                     >
+                        Available Transactions
+                    </label>
 
-                    <button id="searchButton">
-                        Load Audit
-                    </button>
+
+                    <div class="search-row">
+
+                        <select id="transactionSelect">
+
+                            <option value="">
+                                Loading transactions...
+                            </option>
+
+                        </select>
+
+
+                        <button
+                            id="selectLoadButton"
+                        >
+                            Load Audit
+                        </button>
+
+
+                        <button
+                            id="refreshButton"
+                            class="secondary-button"
+                        >
+                            Refresh
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="transactionCount"
+                        class="transaction-count"
+                    >
+                    </div>
 
                 </div>
+
+
+
+                <!-- MANUAL SEARCH -->
+
+                <div class="manual-section">
+
+                    <label
+                        class="search-label"
+                        for="transactionInput"
+                    >
+                        Or enter transaction ID manually
+                    </label>
+
+
+                    <div class="search-row">
+
+                        <input
+                            type="text"
+                            id="transactionInput"
+                            placeholder="e.g. txn_000003"
+                        >
+
+
+                        <button id="searchButton">
+                            Load Audit
+                        </button>
+
+                    </div>
+
+                </div>
+
 
                 <div
                     id="errorBox"
                     class="error-box"
                 ></div>
 
+
+                <div
+                    id="successBox"
+                    class="success-box"
+                ></div>
+
             </div>
 
 
+
             <!-- SUMMARY -->
+
             <div
                 id="summarySection"
                 class="audit-card"
@@ -327,7 +491,9 @@
                     Transaction Summary
                 </h2>
 
+
                 <div class="audit-summary">
+
 
                     <div class="summary-box">
 
@@ -343,6 +509,7 @@
                         </div>
 
                     </div>
+
 
 
                     <div class="summary-box">
@@ -361,6 +528,7 @@
                     </div>
 
 
+
                     <div class="summary-box">
 
                         <div class="summary-label">
@@ -375,6 +543,7 @@
                         </div>
 
                     </div>
+
 
 
                     <div class="summary-box">
@@ -397,7 +566,9 @@
             </div>
 
 
+
             <!-- TIMELINE -->
+
             <div
                 id="timelineSection"
                 class="audit-card"
@@ -416,7 +587,9 @@
             </div>
 
 
+
             <!-- RAW AUDIT -->
+
             <div
                 id="rawSection"
                 class="audit-card"
@@ -435,7 +608,9 @@
             </div>
 
 
+
             <!-- EMPTY -->
+
             <div
                 id="emptyState"
                 class="audit-card"
@@ -448,13 +623,15 @@
                     </h2>
 
                     <p>
-                        Enter a transaction ID to view its
-                        complete decision and execution history.
+                        Select an available transaction or enter
+                        a transaction ID to view its complete
+                        decision and execution history.
                     </p>
 
                 </div>
 
             </div>
+
 
         </section>
 
@@ -466,4 +643,5 @@
 <script src="audit.js"></script>
 
 </body>
+
 </html>

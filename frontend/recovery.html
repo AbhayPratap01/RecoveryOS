@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>RecoveryOS</title>
+    <title>RecoveryOS — Recovery</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div class="app">
@@ -28,39 +27,27 @@
 
         <nav>
 
-            <button class="nav-item active">
+            <a href="index.html" class="nav-item">
                 <span>⌂</span>
                 Overview
-            </button>
+            </a>
 
-            <!-- <button class="nav-item">
-                <a
-    href="recovery.html"
-    class="active"
->
-    ◈ Recovery
-</a> -->
-            <!-- </button> -->
+            <a href="recovery.html" class="nav-item active">
+                <span>◈</span>
+                Recovery
+            </a>
 
-            <button class="nav-item">
-                <a
-    href="audit.html"
-    class="active"
->
-    ◷ Audit
-</a>
-            </button>
+            <a href="audit.html" class="nav-item">
+                <span>◷</span>
+                Audit
+            </a>
 
-            <button class="nav-item">
-                <a
-    href="analytics.html"
-    class="active"
->
-    ▦ Analytics
-</a>
-            </button>
+            <a href="analytics.html" class="nav-item">
+                <span>▦</span>
+                Analytics
+            </a>
 
-        </nav>
+                </nav>
 
         <div class="system-status">
 
@@ -361,7 +348,7 @@
                 <button
                     id="analyzeButton"
                     class="primary-button"
-                    onclick="analyzeTransaction()"
+                    
                 >
 
                     Analyze Payment
@@ -614,7 +601,7 @@
                     <button
                         id="executeButton"
                         class="execute-button"
-                        onclick="executeRecovery()"
+                        
                     >
 
                         Execute Recovery
@@ -731,7 +718,7 @@
 </div>
 
 
-<script src="app.js"></script>
+<script src="recovery.js"></script>
 
 </body>
 </html>
